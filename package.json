@@ -1,0 +1,65 @@
+{
+    "name": "highlight-ip",
+    "displayName": "Highlight IP",
+    "description": "Highlights IPv4 and IPv6 addresses in the document.",
+    "icon": "ICON.png",
+    "version": "1.0.0",
+    "publisher": "medo64",
+    "galleryBanner": {
+        "color": "#373E6D",
+        "theme": "dark"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/medo64/highlight-ip/issues/",
+        "email": "jmedved@jmedved.com"
+    },
+    "homepage": "https://medo64.com/highlight-ip/",
+    "repository": {
+        "url": "https://github.com/medo64/highlight-ip/"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "ipv4",
+        "ipv6"
+    ],
+    "engines": {
+        "vscode": "^1.31.0"
+    },
+    "main": "./out/extension",
+    "activationEvents": [
+        "*"
+    ],
+    "contributes": {
+        "configuration": [
+            {
+                "type": "object",
+                "title": "Highlight IP",
+                "properties": {
+                    "highlight-ip.v4": {
+                        "description": "Determines if IPv4 addresses will be highlighted.",
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "highlight-ip.v6": {
+                        "description": "Determines if IPv6 addresses will be highlighted.",
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "eslint": "^4.19.1",
+        "vsce": "^1.50.0",
+        "vscode": "^1.1.33"
+    }
+}
