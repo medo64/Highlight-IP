@@ -3,7 +3,7 @@
     "displayName": "Highlight IP",
     "description": "Highlights IPv4 and IPv6 addresses in the document.",
     "icon": "ICON.png",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "publisher": "medo64",
     "galleryBanner": {
         "color": "#373E6D",
@@ -45,6 +45,11 @@
                     },
                     "highlight-ip.v6": {
                         "description": "Determines if IPv6 addresses will be highlighted.",
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "highlight-ip.cidr": {
+                        "description": "Determines if IPv6 addresses in CIDR (e.g. 192.168.0.0/24 or  2001:db8::/32) will be highlighted.",
                         "type": "boolean",
                         "default": true
                     }
