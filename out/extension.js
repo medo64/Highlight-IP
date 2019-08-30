@@ -96,9 +96,9 @@ function activate(context) {
         let anyChanges = false
 
         let customConfiguration = vscode.workspace.getConfiguration('highlight-ip', null)
-        let newIPv4Highlight = customConfiguration.get('v4', defaultIPv4Highlight) || defaultIPv4Highlight
-        let newIPv6Highlight = customConfiguration.get('v6', defaultIPv6Highlight) || defaultIPv6Highlight
-        let newCidrHighlight = customConfiguration.get('cidr', defaultCidrHighlight) || defaultCidrHighlight
+        let newIPv4Highlight = customConfiguration.get('v4', defaultIPv4Highlight)
+        let newIPv6Highlight = customConfiguration.get('v6', defaultIPv6Highlight)
+        let newCidrHighlight = customConfiguration.get('cidr', defaultCidrHighlight)
 
         if (ipv4Highlight !== newIPv4Highlight) {
             ipv4Highlight = newIPv4Highlight

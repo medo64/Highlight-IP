@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.1.1]
+
+### Fixed
+- Settings can be turned off.
+
+
 ## [1.1.0]
 
 ### Changed
