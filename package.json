@@ -3,7 +3,7 @@
     "displayName": "Highlight IP",
     "description": "Highlights IPv4 and IPv6 addresses in the document.",
     "icon": "ICON.png",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "publisher": "medo64",
     "galleryBanner": {
         "color": "#373E6D",
@@ -64,7 +64,7 @@
     "dependencies": {},
     "devDependencies": {
         "eslint": "^5.16.0",
-        "vsce": "^1.66.0",
+        "vsce": "^1.71.0",
         "vscode": "^1.1.36"
     }
 }
