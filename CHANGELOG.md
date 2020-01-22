@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.1.3]
+
+### Fixed
+- Correctly showing masks smaller then /24
+
+
 ## [1.1.2]
 
 ### Fixed
