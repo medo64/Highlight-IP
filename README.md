@@ -14,13 +14,32 @@ This extension contributes the following settings:
 
 * `highlight-ip.v6`: Determines if IPv6 addresses will be highlighted.
 
-Color is taken from `textLink.foreground` theme color.
+* `highlight-ip.cidr`: Determines if subnet length (e.g. /24) will be
+                       highlighted in addition to the address.
 
 
 ### Default Configuration
 
     "highlight-ip.v4": true,
-    "highlight-ip.v6": true
+    "highlight-ip.v6": true,
+    "highlight-ip.cidr": true,
+
+
+## Extension Colors
+
+This extension contributes the following colors:
+
+* `ipaddress.network`: Color for IP address.
+
+* `ipaddress.subnet`: Color for IP subnet length.
+
+
+### Default Colors
+
+    "workbench.colorCustomizations": {
+        "ipaddress.network": "textLink.foreground",
+        "ipaddress.subnet": "textLink.foreground",
+    }
 
 
 ## Known Issues

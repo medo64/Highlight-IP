@@ -55,6 +55,26 @@
                     }
                 }
             }
+        ],
+        "colors": [
+            {
+                "id": "ipaddress.network",
+                "description": "Color for IP address.",
+                "defaults": {
+                    "dark": "textLink.foreground",
+                    "light": "textLink.foreground",
+                    "highContrast": "textLink.foreground"
+                }
+            },
+            {
+                "id": "ipaddress.subnet",
+                "description": "Color for IP subnet length.",
+                "defaults": {
+                    "dark": "textLink.foreground",
+                    "light": "textLink.foreground",
+                    "highContrast": "textLink.foreground"
+                }
+            }
         ]
     },
     "scripts": {
