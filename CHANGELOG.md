@@ -1,5 +1,12 @@
 # Change Log
 
+
+## [1.1.4]
+
+### Fixed
+- Updated dependencies
+
+
 ## [1.1.3]
 
 ### Fixed
