@@ -1,6 +1,12 @@
 # Change Log
 
 
+## [1.2.0]
+
+### Changed
+- Added separate customizable colors for network and subnet
+
+
 ## [1.1.4]
 
 ### Fixed
