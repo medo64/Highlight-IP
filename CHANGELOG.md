@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.2.1]
+
+### Fixed
+- Updated dependencies
+
 
 ## [1.2.0]
 
