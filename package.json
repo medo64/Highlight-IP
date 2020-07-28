@@ -52,6 +52,11 @@
                         "description": "Determines if IPv6 addresses in CIDR (e.g. 192.168.0.0/24 or  2001:db8::/32) will be highlighted.",
                         "type": "boolean",
                         "default": true
+                    },
+                    "highlight-ip.strict": {
+                        "description": "Determines if IPv6 addresses will be checked for RFC5952 issues.",
+                        "type": "boolean",
+                        "default": false
                     }
                 }
             }
@@ -73,6 +78,15 @@
                     "dark": "textLink.foreground",
                     "light": "textLink.foreground",
                     "highContrast": "textLink.foreground"
+                }
+            },
+            {
+                "id": "ipaddress.networkIssue",
+                "description": "Color for IP address when its IPv6 format is not in strict RFC5952 compliance.",
+                "defaults": {
+                    "dark": "errorForeground",
+                    "light": "errorForeground",
+                    "highContrast": "errorForeground"
                 }
             }
         ]

@@ -17,12 +17,17 @@ This extension contributes the following settings:
 * `highlight-ip.cidr`: Determines if subnet length (e.g. /24) will be
                        highlighted in addition to the address.
 
+* `highlight-ip.strict`: Extra validation for proper formatting of IPv6 address
+                         (RFC5952 rules). If set to true, IP address will be
+                         recognized and highlighted as error.
+
 
 ### Default Configuration
 
     "highlight-ip.v4": true,
     "highlight-ip.v6": true,
     "highlight-ip.cidr": true,
+    "highlight-ip.strict": false,
 
 
 ## Extension Colors
@@ -33,12 +38,15 @@ This extension contributes the following colors:
 
 * `ipaddress.subnet`: Color for IP subnet length.
 
+* `ipaddress.networkIssue`: Color for the IP address breaking the rule.
+
 
 ### Default Colors
 
     "workbench.colorCustomizations": {
         "ipaddress.network": "textLink.foreground",
         "ipaddress.subnet": "textLink.foreground",
+        "ipaddress.networkIssue": "errorForeground",
     }
 
 

@@ -7,11 +7,14 @@ function activate(context) {
     const defaultIPv4Highlight = true
     const defaultIPv6Highlight = true
     const defaultCidrHighlight = true
+    const defaultStrictMode = false
     var ipv4Highlight
     var ipv6Highlight
     var cidrHighlight
+    var strictMode
 
     const ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
+    const ipNetworkIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.networkIssue') })
     const ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
 
     const ipv4CidrPattern = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/((3[0-2])|(2[0-9])|(1[0-9])|[0-9]))?/g
@@ -28,6 +31,7 @@ function activate(context) {
         const shouldRender = ipv4Highlight | ipv6Highlight
 
         var ipNetworkDecorations = []
+        var ipNetworkIssueDecorations = []
         var ipSubnetDecorations = []
         if (shouldRender) {
             //determine what is exactly visible
@@ -60,9 +64,9 @@ function activate(context) {
                         const endsAt = match.index + match[0].length
                         if ((startsAt > 0) && ipv4BreakPattern.exec(lineText.charAt(startsAt - 1))) { continue } //skip if character before match
                         if ((endsAt < lineLength) && ipv4BreakPattern.exec(lineText.charAt(endsAt))) { continue } //skip if character after match
-                        const address = match[0]
-                        const slashIndex = address.indexOf('/')
-                        const cidrLength = (slashIndex == -1) ? 0 : (address.length - slashIndex)
+                        const addressMatch = match[0]
+                        const slashIndex = addressMatch.indexOf('/')
+                        const cidrLength = (slashIndex == -1) ? 0 : (addressMatch.length - slashIndex)
                         ipNetworkDecorations.push({
                             range: new vscode.Range(
                                 new vscode.Position(i, startsAt),
@@ -87,15 +91,79 @@ function activate(context) {
                         const endsAt = match.index + match[0].length
                         if ((startsAt > 0) && ipv6BreakPattern.exec(lineText.charAt(startsAt - 1))) { continue } //skip if character before match
                         if ((endsAt < lineLength) && ipv6BreakPattern.exec(lineText.charAt(endsAt))) { continue } //skip if character after match
-                        const address = match[0]
-                        const slashIndex = address.indexOf('/')
-                        const cidrLength = (slashIndex == -1) ? 0 : (address.length - slashIndex)
-                        ipNetworkDecorations.push({
-                            range: new vscode.Range(
-                                new vscode.Position(i, startsAt),
-                                new vscode.Position(i, endsAt - cidrLength)
-                            )
-                        })
+
+                        const addressMatch = match[0]
+                        const slashIndex = addressMatch.indexOf('/')
+                        const cidrLength = (slashIndex == -1) ? 0 : (addressMatch.length - slashIndex)
+
+                        let validStrictNetwork = true
+                        if (strictMode) {
+                            const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
+                            let addressPartsRaw = address.split(':');
+                            const addressParts = addressPartsRaw.filter(function (item) { return item !== '' })
+
+                            //expand IP - brute force
+                            let longAddress = address.replace('::', ':' + '0:'.repeat(8 - addressParts.length))
+                            if (longAddress.startsWith(':')) { longAddress = longAddress.substring(1) }
+                            if (longAddress.endsWith(':')) { longAddress = longAddress.substring(0, longAddress.length - 1) }
+
+                            //shorten the longest run (RFC5952: shorten as much as possible -or- the first sequence of zero bits must be shortened)
+                            const longAddressParts = longAddress.split(':')
+                            let wasZero = false
+                            let currRunIndex = 0
+                            let currRunLength = 0
+                            let longRunIndex = 0
+                            let longRunLength = 0
+                            for (let i = 0; i < longAddressParts.length; i++) {
+                                if (longAddressParts[i] === '0') {
+                                    if (wasZero) {
+                                        currRunLength += 1
+                                        if (currRunLength > longRunLength) {
+                                            longRunIndex = currRunIndex
+                                            longRunLength = currRunLength
+                                        }
+                                    } else {
+                                        currRunIndex = i
+                                        currRunLength = 1
+                                        wasZero = true
+                                    }
+                                } else {
+                                    wasZero = false
+                                }
+                            }
+
+                            let skipColon = true
+                            let formattedAddress = ''
+                            for (let i = 0; i < longAddressParts.length; i++) {
+                                if ((longRunLength > 0) && (longRunIndex == i)) {
+                                    formattedAddress += '::'
+                                    skipColon = true
+                                } else if ((longRunLength == 0) || (i < longRunIndex) || (i >= (longRunIndex + longRunLength))) {
+                                    if (!skipColon) { formattedAddress += ':' }
+                                    formattedAddress +=  parseInt(longAddressParts[i], 16).toString(16); ////RFC5952: leading zeros must be suppressed -and- The characters must be lowercase
+                                    skipColon = false
+                                }
+                            }
+
+                            validStrictNetwork = (address === formattedAddress);
+                        }
+
+                        if (validStrictNetwork) {
+                            ipNetworkDecorations.push({
+                                range: new vscode.Range(
+                                    new vscode.Position(i, startsAt),
+                                    new vscode.Position(i, endsAt - cidrLength)
+                                )
+                            })
+                        } else {
+                            ipNetworkIssueDecorations.push({
+                                range: new vscode.Range(
+                                    new vscode.Position(i, startsAt),
+                                    new vscode.Position(i, endsAt - cidrLength)
+                                )
+                            })
+                        }
+
                         if (cidrHighlight && (cidrLength > 0)) {
                             ipSubnetDecorations.push({
                                 range: new vscode.Range(
@@ -110,6 +178,7 @@ function activate(context) {
         }
 
         if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, ipNetworkDecorations) }
+        if (editor.setDecorations) { editor.setDecorations(ipNetworkIssueDecorationType, ipNetworkIssueDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, ipSubnetDecorations) }
     }
 
@@ -120,6 +189,7 @@ function activate(context) {
         let newIPv4Highlight = customConfiguration.get('v4', defaultIPv4Highlight)
         let newIPv6Highlight = customConfiguration.get('v6', defaultIPv6Highlight)
         let newCidrHighlight = customConfiguration.get('cidr', defaultCidrHighlight)
+        let newStrictMode = customConfiguration.get('strict', defaultStrictMode)
 
         if (ipv4Highlight !== newIPv4Highlight) {
             ipv4Highlight = newIPv4Highlight
@@ -131,6 +201,10 @@ function activate(context) {
         }
         if (cidrHighlight !== newCidrHighlight) {
             cidrHighlight = newCidrHighlight
+            anyChanges = true
+        }
+        if (strictMode !== newStrictMode) {
+            strictMode = newStrictMode
             anyChanges = true
         }
 
