@@ -10,8 +10,8 @@ function activate(context) {
     const defaultStrictMode = false
 
     const ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
-    const ipNetworkIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.networkIssue') })
     const ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
+    const ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
 
     const ipv4CidrPattern = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/((3[0-2])|(2[0-9])|(1[0-9])|[0-9]))?/g
     const ipv6CidrPattern = /((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(\/((12[0-8])|(1[0-1][0-9])|([1-9][0-9])|[0-9]))?/g
@@ -28,8 +28,9 @@ function activate(context) {
         const shouldRender = ipv4Highlight || ipv6Highlight
 
         var ipNetworkDecorations = []
-        var ipNetworkIssueDecorations = []
         var ipSubnetDecorations = []
+        var ipIssueDecorations = []
+
         if (shouldRender) {
             //determine what is exactly visible
             let visibleRanges = (ranges == null) ? editor.visibleRanges : ranges
@@ -67,15 +68,27 @@ function activate(context) {
                         const cidrLength = (slashIndex == -1) ? 0 : (addressMatch.length - slashIndex)
 
                         let validStrictNetwork = true
+                        let validStrictSubnet = true
                         if (strictMode) {
                             const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
                             let addressParts = address.split('.')
+                            let addressValue = 0
                             addressParts.forEach(addressPart => {
+                                const addressPartValue = parseInt(addressPart)
+                                addressValue = (addressValue << 8) + addressPartValue
                                 if ((addressPart.length > 1) && addressPart.startsWith('0')) { //check if octet starts with unnecessary 0
                                     validStrictNetwork = false
-                                    return
                                 }
                             })
+
+                            const subnet = (slashIndex == -1) ? '' : addressMatch.substr(slashIndex + 1)
+                            if (subnet.length > 0) {
+                                const subnetShift = 32 - parseInt(subnet)
+                                const addressNetworkValue = (addressValue >> subnetShift) << subnetShift
+                                if (addressNetworkValue !== addressValue) { //network doesn't match subnet
+                                    validStrictSubnet = false
+                                }
+                            }
                         }
 
                         if (validStrictNetwork) {
@@ -86,7 +99,7 @@ function activate(context) {
                                 )
                             })
                         } else {
-                            ipNetworkIssueDecorations.push({
+                            ipIssueDecorations.push({
                                 range: new vscode.Range(
                                     new vscode.Position(i, startsAt),
                                     new vscode.Position(i, endsAt - cidrLength)
@@ -95,12 +108,21 @@ function activate(context) {
                         }
 
                         if (cidrHighlight && (cidrLength > 0)) {
-                            ipSubnetDecorations.push({
-                                range: new vscode.Range(
-                                    new vscode.Position(i, endsAt - cidrLength),
-                                    new vscode.Position(i, endsAt)
-                                )
-                            })
+                            if (validStrictSubnet) {
+                                ipSubnetDecorations.push({
+                                    range: new vscode.Range(
+                                        new vscode.Position(i, endsAt - cidrLength),
+                                        new vscode.Position(i, endsAt)
+                                    )
+                                })
+                            } else {
+                                ipIssueDecorations.push({
+                                    range: new vscode.Range(
+                                        new vscode.Position(i, endsAt - cidrLength),
+                                        new vscode.Position(i, endsAt)
+                                    )
+                                })
+                            }
                         }
                     }
                 }
@@ -177,7 +199,7 @@ function activate(context) {
                                 )
                             })
                         } else {
-                            ipNetworkIssueDecorations.push({
+                            ipIssueDecorations.push({
                                 range: new vscode.Range(
                                     new vscode.Position(i, startsAt),
                                     new vscode.Position(i, endsAt - cidrLength)
@@ -199,8 +221,8 @@ function activate(context) {
         }
 
         if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, ipNetworkDecorations) }
-        if (editor.setDecorations) { editor.setDecorations(ipNetworkIssueDecorationType, ipNetworkIssueDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, ipSubnetDecorations) }
+        if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, ipIssueDecorations) }
     }
 
 

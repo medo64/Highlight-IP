@@ -85,7 +85,7 @@
                 }
             },
             {
-                "id": "ipaddress.networkIssue",
+                "id": "ipaddress.issue",
                 "description": "Color for IP address when its IPv6 format is not in strict RFC5952 compliance.",
                 "defaults": {
                     "dark": "errorForeground",
