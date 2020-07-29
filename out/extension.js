@@ -83,10 +83,15 @@ function activate(context) {
 
                             const subnet = (slashIndex == -1) ? '' : addressMatch.substr(slashIndex + 1)
                             if (subnet.length > 0) {
-                                const subnetShift = 32 - parseInt(subnet)
-                                const addressNetworkValue = (addressValue >> subnetShift) << subnetShift
-                                if (addressNetworkValue !== addressValue) { //network doesn't match subnet
-                                    validStrictSubnet = false
+                                const subnetValue = parseInt(subnet)
+                                if (subnetValue == 0) { //subnet 0 cannot have any address other than 0.0.0.0
+                                    validStrictSubnet = (addressValue === 0)
+                                } else {
+                                    const subnetShift = 32 - subnetValue
+                                    const addressNetworkValue = (addressValue >> subnetShift) << subnetShift
+                                    if (addressNetworkValue !== addressValue) { //network doesn't match subnet
+                                        validStrictSubnet = false
+                                    }
                                 }
                             }
                         }
