@@ -145,6 +145,7 @@ function activate(context) {
                         const cidrLength = (slashIndex == -1) ? 0 : (addressMatch.length - slashIndex)
 
                         let validStrictNetwork = true
+                        let validStrictSubnet = true
                         if (strictMode) {
                             const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
                             let addressPartsRaw = address.split(':');
@@ -192,8 +193,30 @@ function activate(context) {
                                     skipColon = false
                                 }
                             }
-
                             validStrictNetwork = (address === formattedAddress);
+
+                            const subnet = (slashIndex == -1) ? '' : addressMatch.substr(slashIndex + 1)
+                            if (subnet.length > 0) {
+                                const subnetValue = parseInt(subnet)
+                                if (subnetValue == 0) { //subnet 0 cannot have any address other than ::
+                                    validStrictSubnet = (formattedAddress === '::')
+                                } else {
+                                    const subnetHextetIndex = (subnetValue - 1) / 16>>0
+                                    const hextetValue = parseInt(longAddressParts[subnetHextetIndex], 16)
+                                    const subnetShift = 16 - (subnetValue - subnetHextetIndex * 16)
+                                    const hextetNetworkValue = (hextetValue >> subnetShift) << subnetShift
+                                    if (hextetNetworkValue !== hextetValue) { //network doesn't match subnet
+                                        validStrictSubnet = false
+                                    } else { //check that nothing after match is set
+                                        for(let i = subnetHextetIndex + 1; i < 8; i++) {
+                                            if (longAddressParts[i] !== '0') {
+                                                validStrictSubnet = false
+                                                break
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         if (validStrictNetwork) {
@@ -213,12 +236,21 @@ function activate(context) {
                         }
 
                         if (cidrHighlight && (cidrLength > 0)) {
-                            ipSubnetDecorations.push({
-                                range: new vscode.Range(
-                                    new vscode.Position(i, endsAt - cidrLength),
-                                    new vscode.Position(i, endsAt)
-                                )
-                            })
+                            if (validStrictSubnet) {
+                                ipSubnetDecorations.push({
+                                    range: new vscode.Range(
+                                        new vscode.Position(i, endsAt - cidrLength),
+                                        new vscode.Position(i, endsAt)
+                                    )
+                                })
+                            } else {
+                                ipIssueDecorations.push({
+                                    range: new vscode.Range(
+                                        new vscode.Position(i, endsAt - cidrLength),
+                                        new vscode.Position(i, endsAt)
+                                    )
+                                })
+                            }
                         }
                     }
                 }
