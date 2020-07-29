@@ -61,15 +61,39 @@ function activate(context) {
                         const endsAt = match.index + match[0].length
                         if ((startsAt > 0) && ipv4BreakPattern.exec(lineText.charAt(startsAt - 1))) { continue } //skip if character before match
                         if ((endsAt < lineLength) && ipv4BreakPattern.exec(lineText.charAt(endsAt))) { continue } //skip if character after match
+
                         const addressMatch = match[0]
                         const slashIndex = addressMatch.indexOf('/')
                         const cidrLength = (slashIndex == -1) ? 0 : (addressMatch.length - slashIndex)
-                        ipNetworkDecorations.push({
-                            range: new vscode.Range(
-                                new vscode.Position(i, startsAt),
-                                new vscode.Position(i, endsAt - cidrLength)
-                            )
-                        })
+
+                        let validStrictNetwork = true
+                        if (strictMode) {
+                            const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
+                            let addressParts = address.split('.')
+                            addressParts.forEach(addressPart => {
+                                if ((addressPart.length > 1) && addressPart.startsWith('0')) { //check if octet starts with unnecessary 0
+                                    validStrictNetwork = false
+                                    return
+                                }
+                            })
+                        }
+
+                        if (validStrictNetwork) {
+                            ipNetworkDecorations.push({
+                                range: new vscode.Range(
+                                    new vscode.Position(i, startsAt),
+                                    new vscode.Position(i, endsAt - cidrLength)
+                                )
+                            })
+                        } else {
+                            ipNetworkIssueDecorations.push({
+                                range: new vscode.Range(
+                                    new vscode.Position(i, startsAt),
+                                    new vscode.Position(i, endsAt - cidrLength)
+                                )
+                            })
+                        }
+
                         if (cidrHighlight && (cidrLength > 0)) {
                             ipSubnetDecorations.push({
                                 range: new vscode.Range(
