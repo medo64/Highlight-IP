@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.3.0]
+
+### Changed
+- Added verification of IP address formatting
+- Added verification for subnet size
+
+
 ## [1.2.1]
 
 ### Fixed
