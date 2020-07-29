@@ -8,10 +8,6 @@ function activate(context) {
     const defaultIPv6Highlight = true
     const defaultCidrHighlight = true
     const defaultStrictMode = false
-    var ipv4Highlight
-    var ipv6Highlight
-    var cidrHighlight
-    var strictMode
 
     const ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
     const ipNetworkIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.networkIssue') })
@@ -28,7 +24,8 @@ function activate(context) {
         const document = editor.document
         if (!document) { return }
 
-        const shouldRender = ipv4Highlight | ipv6Highlight
+        const [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ] = getDocumentSettings(document)
+        const shouldRender = ipv4Highlight || ipv6Highlight
 
         var ipNetworkDecorations = []
         var ipNetworkIssueDecorations = []
@@ -182,37 +179,38 @@ function activate(context) {
         if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, ipSubnetDecorations) }
     }
 
-    function updateConfiguration() {
-        let anyChanges = false
 
+    function getDocumentSettings(document) {
         let customConfiguration = vscode.workspace.getConfiguration('highlight-ip', null)
-        let newIPv4Highlight = customConfiguration.get('v4', defaultIPv4Highlight)
-        let newIPv6Highlight = customConfiguration.get('v6', defaultIPv6Highlight)
-        let newCidrHighlight = customConfiguration.get('cidr', defaultCidrHighlight)
-        let newStrictMode = customConfiguration.get('strict', defaultStrictMode)
+        let ipv4Highlight = (customConfiguration != null) ? customConfiguration.get('v4',     defaultIPv4Highlight) || defaultIPv4Highlight : defaultIPv4Highlight
+        let ipv6Highlight = (customConfiguration != null) ? customConfiguration.get('v6',     defaultIPv6Highlight) || defaultIPv6Highlight : defaultIPv6Highlight
+        let cidrHighlight = (customConfiguration != null) ? customConfiguration.get('cidr',   defaultCidrHighlight) || defaultCidrHighlight : defaultCidrHighlight
+        let strictMode    = (customConfiguration != null) ? customConfiguration.get('strict', defaultStrictMode)    || defaultStrictMode    : defaultStrictMode
 
-        if (ipv4Highlight !== newIPv4Highlight) {
-            ipv4Highlight = newIPv4Highlight
-            anyChanges = true
-        }
-        if (ipv6Highlight !== newIPv6Highlight) {
-            ipv6Highlight = newIPv6Highlight
-            anyChanges = true
-        }
-        if (cidrHighlight !== newCidrHighlight) {
-            cidrHighlight = newCidrHighlight
-            anyChanges = true
-        }
-        if (strictMode !== newStrictMode) {
-            strictMode = newStrictMode
-            anyChanges = true
+        const languageId = document.languageId
+        if (languageId) {
+            const languageSpecificConfiguration = vscode.workspace.getConfiguration('[' + languageId + ']', null)
+            if (languageSpecificConfiguration !== null) {
+
+                const specificIPv4Highlight = languageSpecificConfiguration['highlight-ip.v4']
+                if (specificIPv4Highlight) { ipv4Highlight = specificIPv4Highlight }
+
+                const specificIPv6Highlight = languageSpecificConfiguration['highlight-ip.v6']
+                if (specificIPv6Highlight) { ipv6Highlight = specificIPv6Highlight }
+
+                const specificCidrHighlight = languageSpecificConfiguration['highlight-ip.cidr']
+                if (specificCidrHighlight) { cidrHighlight = specificCidrHighlight }
+
+                const specificStrictMode = languageSpecificConfiguration['highlight-ip.strict']
+                if (specificStrictMode) { strictMode = specificStrictMode }
+
+            }
         }
 
-        return anyChanges
+        return [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ]
     }
 
 
-    updateConfiguration()
     renderDocument(vscode.window.activeTextEditor)
 
 
@@ -231,9 +229,7 @@ function activate(context) {
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeConfiguration(() => {
-        if (updateConfiguration()) {
-            renderDocument(vscode.window.activeTextEditor)
-        }
+        renderDocument(vscode.window.activeTextEditor)
     }, null, context.subscriptions)
 }
 exports.activate = activate

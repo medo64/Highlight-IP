@@ -40,21 +40,25 @@
                 "properties": {
                     "highlight-ip.v4": {
                         "description": "Determines if IPv4 addresses will be highlighted.",
+                        "scope": "language-overridable",
                         "type": "boolean",
                         "default": true
                     },
                     "highlight-ip.v6": {
                         "description": "Determines if IPv6 addresses will be highlighted.",
+                        "scope": "language-overridable",
                         "type": "boolean",
                         "default": true
                     },
                     "highlight-ip.cidr": {
                         "description": "Determines if IPv6 addresses in CIDR (e.g. 192.168.0.0/24 or  2001:db8::/32) will be highlighted.",
+                        "scope": "language-overridable",
                         "type": "boolean",
                         "default": true
                     },
                     "highlight-ip.strict": {
                         "description": "Determines if IPv6 addresses will be checked for RFC5952 issues.",
+                        "scope": "language-overridable",
                         "type": "boolean",
                         "default": false
                     }
