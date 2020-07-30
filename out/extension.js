@@ -9,9 +9,10 @@ function activate(context) {
     const defaultCidrHighlight = true
     const defaultStrictMode = false
 
-    const ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
-    const ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
-    const ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
+    // decorations
+    var ipNetworkDecorationTypes = {}
+    var ipSubnetDecorationTypes = {}
+    var ipIssueDecorationTypes = {}
 
     const ipv4CidrPattern = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/((3[0-2])|(2[0-9])|(1[0-9])|[0-9]))?/g
     const ipv6CidrPattern = /((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(\/((12[0-8])|(1[0-1][0-9])|([1-9][0-9])|[0-9]))?/g
@@ -27,11 +28,39 @@ function activate(context) {
         const [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ] = getDocumentSettings(document)
         const shouldRender = ipv4Highlight || ipv6Highlight
 
+        let ipNetworkDecorationType = null
+        let ipSubnetDecorationType = null
+        let ipIssueDecorationType = null
+
         var ipNetworkDecorations = []
         var ipSubnetDecorations = []
         var ipIssueDecorations = []
 
         if (shouldRender) {
+            if (editor.id in ipNetworkDecorationTypes) { ipNetworkDecorationType = ipNetworkDecorationTypes[editor.id] }
+            if (ipNetworkDecorationType != null) {
+                if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, []) }
+                ipNetworkDecorationType.dispose();
+            }
+            ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
+            ipNetworkDecorationTypes[editor.id] =  ipNetworkDecorationType
+
+            if (editor.id in ipSubnetDecorationTypes) { ipSubnetDecorationType = ipSubnetDecorationTypes[editor.id] }
+            if (ipSubnetDecorationType != null) {
+                if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, []) }
+                ipSubnetDecorationType.dispose();
+            }
+            ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
+            ipSubnetDecorationTypes[editor.id] =  ipSubnetDecorationType
+
+            if (editor.id in ipIssueDecorationTypes) { ipIssueDecorationType = ipIssueDecorationTypes[editor.id] }
+            if (ipIssueDecorationType != null) {
+                if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, []) }
+                ipIssueDecorationType.dispose();
+            }
+            ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
+            ipIssueDecorationTypes[editor.id] =  ipIssueDecorationType
+
             //determine what is exactly visible
             let visibleRanges = (ranges == null) ? editor.visibleRanges : ranges
             let startOffset = document.offsetAt(visibleRanges[0].start)
@@ -305,6 +334,12 @@ function activate(context) {
         if ((e.textEditor != null) && (e.textEditor.document != null) && (e.visibleRanges.length > 0)) {
             renderDocument(e.textEditor, e.visibleRanges)
         }
+    }, null, context.subscriptions)
+
+    vscode.window.onDidChangeVisibleTextEditors((e) => {
+        e.forEach(editor => {
+            renderDocument(editor)
+        });
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeTextDocument(() => {
