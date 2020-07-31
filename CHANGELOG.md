@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.1]
+
+### Fixed
+- Works properly in file compare dialog
+
+
 ## [1.3.0]
 
 ### Changed
