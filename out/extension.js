@@ -28,39 +28,35 @@ function activate(context) {
         const [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ] = getDocumentSettings(document)
         const shouldRender = ipv4Highlight || ipv6Highlight
 
-        let ipNetworkDecorationType = null
-        let ipSubnetDecorationType = null
-        let ipIssueDecorationType = null
+        let ipNetworkDecorationType = (editor.id in ipNetworkDecorationTypes) ? ipNetworkDecorationTypes[editor.id] : null
+        if (ipNetworkDecorationType != null) {
+            if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, []) }
+            ipNetworkDecorationType.dispose();
+        }
+        ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
+        ipNetworkDecorationTypes[editor.id] =  ipNetworkDecorationType
+
+        let ipSubnetDecorationType = (editor.id in ipSubnetDecorationTypes) ? ipSubnetDecorationTypes[editor.id] : null
+        if (ipSubnetDecorationType != null) {
+            if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, []) }
+            ipSubnetDecorationType.dispose();
+        }
+        ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
+        ipSubnetDecorationTypes[editor.id] =  ipSubnetDecorationType
+
+        let ipIssueDecorationType = (editor.id in ipIssueDecorationTypes) ? ipIssueDecorationTypes[editor.id] : null
+        if (ipIssueDecorationType != null) {
+            if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, []) }
+            ipIssueDecorationType.dispose();
+        }
+        ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
+        ipIssueDecorationTypes[editor.id] =  ipIssueDecorationType
 
         var ipNetworkDecorations = []
         var ipSubnetDecorations = []
         var ipIssueDecorations = []
 
         if (shouldRender) {
-            if (editor.id in ipNetworkDecorationTypes) { ipNetworkDecorationType = ipNetworkDecorationTypes[editor.id] }
-            if (ipNetworkDecorationType != null) {
-                if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, []) }
-                ipNetworkDecorationType.dispose();
-            }
-            ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
-            ipNetworkDecorationTypes[editor.id] =  ipNetworkDecorationType
-
-            if (editor.id in ipSubnetDecorationTypes) { ipSubnetDecorationType = ipSubnetDecorationTypes[editor.id] }
-            if (ipSubnetDecorationType != null) {
-                if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, []) }
-                ipSubnetDecorationType.dispose();
-            }
-            ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
-            ipSubnetDecorationTypes[editor.id] =  ipSubnetDecorationType
-
-            if (editor.id in ipIssueDecorationTypes) { ipIssueDecorationType = ipIssueDecorationTypes[editor.id] }
-            if (ipIssueDecorationType != null) {
-                if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, []) }
-                ipIssueDecorationType.dispose();
-            }
-            ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
-            ipIssueDecorationTypes[editor.id] =  ipIssueDecorationType
-
             //determine what is exactly visible
             let visibleRanges = (ranges == null) ? editor.visibleRanges : ranges
             let startOffset = document.offsetAt(visibleRanges[0].start)
