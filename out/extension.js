@@ -81,8 +81,8 @@ function activate(context) {
                 const lineLength = lineText.length
 
                 if (ipv4Highlight) {
-                    var match
-                    while (match = ipv4CidrPattern.exec(lineText)) {
+                    let match
+                    while ((match = ipv4CidrPattern.exec(lineText))) {
                         const startsAt = match.index
                         const endsAt = match.index + match[0].length
                         if ((startsAt > 0) && ipv4BreakPattern.exec(lineText.charAt(startsAt - 1))) { continue } //skip if character before match
@@ -158,8 +158,8 @@ function activate(context) {
                 }
 
                 if (ipv6Highlight) {
-                    var match
-                    while (match = ipv6CidrPattern.exec(lineText)) {
+                    let match
+                    while ((match = ipv6CidrPattern.exec(lineText))) {
                         const startsAt = match.index
                         const endsAt = match.index + match[0].length
                         if ((startsAt > 0) && ipv6BreakPattern.exec(lineText.charAt(startsAt - 1))) { continue } //skip if character before match
