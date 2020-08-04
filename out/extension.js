@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const vscode = require('vscode')
 
@@ -31,7 +31,7 @@ function activate(context) {
         let ipNetworkDecorationType = (editor.id in ipNetworkDecorationTypes) ? ipNetworkDecorationTypes[editor.id] : null
         if (ipNetworkDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, []) }
-            ipNetworkDecorationType.dispose();
+            ipNetworkDecorationType.dispose()
         }
         ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
         ipNetworkDecorationTypes[editor.id] =  ipNetworkDecorationType
@@ -39,7 +39,7 @@ function activate(context) {
         let ipSubnetDecorationType = (editor.id in ipSubnetDecorationTypes) ? ipSubnetDecorationTypes[editor.id] : null
         if (ipSubnetDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, []) }
-            ipSubnetDecorationType.dispose();
+            ipSubnetDecorationType.dispose()
         }
         ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
         ipSubnetDecorationTypes[editor.id] =  ipSubnetDecorationType
@@ -47,7 +47,7 @@ function activate(context) {
         let ipIssueDecorationType = (editor.id in ipIssueDecorationTypes) ? ipIssueDecorationTypes[editor.id] : null
         if (ipIssueDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, []) }
-            ipIssueDecorationType.dispose();
+            ipIssueDecorationType.dispose()
         }
         ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
         ipIssueDecorationTypes[editor.id] =  ipIssueDecorationType
@@ -62,10 +62,10 @@ function activate(context) {
             let startOffset = document.offsetAt(visibleRanges[0].start)
             let endOffset = document.offsetAt(visibleRanges[0].end)
             for(let i=1; i<visibleRanges.length; i++) {
-                 let nextStartOffset = document.offsetAt(visibleRanges[i].start)
-                 let nextEndOffset = document.offsetAt(visibleRanges[i].end)
-                 if (startOffset > nextStartOffset) { startOffset = nextStartOffset; }
-                 if (endOffset < nextEndOffset) { endOffset = nextEndOffset; }
+                let nextStartOffset = document.offsetAt(visibleRanges[i].start)
+                let nextEndOffset = document.offsetAt(visibleRanges[i].end)
+                if (startOffset > nextStartOffset) { startOffset = nextStartOffset }
+                if (endOffset < nextEndOffset) { endOffset = nextEndOffset }
             }
 
             let startPosition = document.positionAt(startOffset)
@@ -173,7 +173,7 @@ function activate(context) {
                         let validStrictSubnet = true
                         if (strictMode) {
                             const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
-                            let addressPartsRaw = address.split(':');
+                            let addressPartsRaw = address.split(':')
                             const addressParts = addressPartsRaw.filter(function (item) { return item !== '' })
 
                             //expand IP - brute force
@@ -214,11 +214,11 @@ function activate(context) {
                                     skipColon = true
                                 } else if ((longRunLength == 0) || (i < longRunIndex) || (i >= (longRunIndex + longRunLength))) {
                                     if (!skipColon) { formattedAddress += ':' }
-                                    formattedAddress +=  parseInt(longAddressParts[i], 16).toString(16); ////RFC5952: leading zeros must be suppressed -and- The characters must be lowercase
+                                    formattedAddress +=  parseInt(longAddressParts[i], 16).toString(16) ////RFC5952: leading zeros must be suppressed -and- The characters must be lowercase
                                     skipColon = false
                                 }
                             }
-                            validStrictNetwork = (address === formattedAddress);
+                            validStrictNetwork = (address === formattedAddress)
 
                             const subnet = (slashIndex == -1) ? '' : addressMatch.substr(slashIndex + 1)
                             if (subnet.length > 0) {
@@ -335,7 +335,7 @@ function activate(context) {
     vscode.window.onDidChangeVisibleTextEditors((e) => {
         e.forEach(editor => {
             renderDocument(editor)
-        });
+        })
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeTextDocument(() => {
