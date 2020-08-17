@@ -3,7 +3,10 @@
 const vscode = require('vscode')
 
 
+/** @param {vscode.ExtensionContext} context */
 function activate(context) {
+    const isDebug = (context.extensionMode === 2)
+
     const defaultIPv4Highlight = true
     const defaultIPv6Highlight = true
     const defaultCidrHighlight = true
@@ -24,13 +27,13 @@ function activate(context) {
      * @param {vscode.Range[]} [ranges]
      */
     function renderDocument(editor, ranges) {
-        if (context.extensionMode === 2) { console.debug('renderDocument()') }
+        if (isDebug) { console.debug('renderDocument()') }
         if (!editor) { return }
 
         const document = editor.document
         if (!document) { return }
 
-        const startTime = new Date().getTime()
+        const startTime = isDebug ? new Date().getTime() : null
         const id = editor.id
 
         const [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ] = getDocumentSettings(document)
@@ -294,13 +297,13 @@ function activate(context) {
             }
         }
 
-        if (context.extensionMode === 2) { console.debug('renderDocument() Decorations ready in ' + (new Date().getTime() - startTime) + ' ms') }
+        if (isDebug) { console.debug('renderDocument() ready for decorating in ' + (new Date().getTime() - startTime) + ' ms') }
 
         if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, ipNetworkDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, ipSubnetDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, ipIssueDecorations) }
 
-        if (context.extensionMode === 2) { console.debug('renderDocument() Done in ' + (new Date().getTime() - startTime) + ' ms') }
+        if (isDebug) { console.debug('renderDocument() finished in ' + (new Date().getTime() - startTime) + ' ms') }
     }
 
 
@@ -340,13 +343,13 @@ function activate(context) {
 
     /** @param e: vscode.TextEditorSelectionChangeEvent */
     vscode.window.onDidChangeActiveTextEditor((e) => {
-        if (context.extensionMode === 2) { console.debug('onDidChangeActiveTextEditor()') }
+        if (isDebug) { console.debug('onDidChangeActiveTextEditor()') }
         renderDocument(e)
     }, null, context.subscriptions)
 
     /** @param e: vscode.TextEditorVisibleRangesChangeEvent */
     vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
-        if (context.extensionMode === 2) { console.debug('onDidChangeTextEditorVisibleRanges()') }
+        if (isDebug) { console.debug('onDidChangeTextEditorVisibleRanges()') }
         if ((e.textEditor != null) && (e.textEditor.document != null) && (e.visibleRanges.length > 0)) {
             renderDocument(e.textEditor, e.visibleRanges)
         }
@@ -354,19 +357,19 @@ function activate(context) {
 
     /** @param e: vscode.TextEditor[] */
     vscode.window.onDidChangeVisibleTextEditors((e) => {
-        if (context.extensionMode === 2) { console.debug('onDidChangeVisibleTextEditors()') }
+        if (isDebug) { console.debug('onDidChangeVisibleTextEditors()') }
         e.forEach(editor => {
             renderDocument(editor)
         })
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeTextDocument(() => {
-        if (context.extensionMode === 2) { console.debug('onDidChangeTextDocument()') }
+        if (isDebug) { console.debug('onDidChangeTextDocument()') }
         renderDocument(vscode.window.activeTextEditor)
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeConfiguration(() => {
-        if (context.extensionMode === 2) { console.debug('onDidChangeConfiguration()') }
+        if (isDebug) { console.debug('onDidChangeConfiguration()') }
         renderDocument(vscode.window.activeTextEditor)
     }, null, context.subscriptions)
 }
