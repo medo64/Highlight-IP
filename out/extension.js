@@ -5,6 +5,7 @@ const vscode = require('vscode')
 
 /** @param {vscode.ExtensionContext} context */
 function activate(context) {
+    // @ts-ignore
     const isDebug = (context.extensionMode === 2)
 
     const defaultIPv4Highlight = true
@@ -34,6 +35,7 @@ function activate(context) {
         if (!document) { return }
 
         const startTime = isDebug ? new Date().getTime() : null
+        // @ts-ignore
         const id = editor.id
 
         const [ ipv4Highlight, ipv6Highlight, cidrHighlight, strictMode ] = getDocumentSettings(document)
