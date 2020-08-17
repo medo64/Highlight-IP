@@ -140,8 +140,9 @@ function activate(context) {
                             ipIssueDecorations.push({
                                 range: new vscode.Range(
                                     new vscode.Position(i, startsAt),
-                                    new vscode.Position(i, endsAt - cidrLength)
-                                )
+                                    new vscode.Position(i, endsAt - cidrLength),
+                                ),
+                                hoverMessage: 'IPv4 octets should not start with zero'
                             })
                         }
 
@@ -158,7 +159,8 @@ function activate(context) {
                                     range: new vscode.Range(
                                         new vscode.Position(i, endsAt - cidrLength),
                                         new vscode.Position(i, endsAt)
-                                    )
+                                    ),
+                                    hoverMessage: 'Subnet not possible'
                                 })
                             }
                         }
@@ -179,6 +181,7 @@ function activate(context) {
 
                         let validStrictNetwork = true
                         let validStrictSubnet = true
+                        let formattedAddress = ''
                         if (strictMode) {
                             const address = (slashIndex == -1) ? addressMatch : addressMatch.substr(0, slashIndex)
                             let addressPartsRaw = address.split(':')
@@ -215,7 +218,6 @@ function activate(context) {
                             }
 
                             let skipColon = true
-                            let formattedAddress = ''
                             for (let i = 0; i < longAddressParts.length; i++) {
                                 if ((longRunLength > 0) && (longRunIndex == i)) {
                                     formattedAddress += '::'
@@ -264,7 +266,8 @@ function activate(context) {
                                 range: new vscode.Range(
                                     new vscode.Position(i, startsAt),
                                     new vscode.Position(i, endsAt - cidrLength)
-                                )
+                                ),
+                                hoverMessage: 'Correctly formatted IPv6 address would be ' + formattedAddress
                             })
                         }
 
@@ -281,7 +284,8 @@ function activate(context) {
                                     range: new vscode.Range(
                                         new vscode.Position(i, endsAt - cidrLength),
                                         new vscode.Position(i, endsAt)
-                                    )
+                                    ),
+                                    hoverMessage: 'Subnet not possible'
                                 })
                             }
                         }
