@@ -1,5 +1,14 @@
 # Change Log
 
+## [1.3.2]
+
+### Changed
+- Added hover messages for errors
+
+### Fixed
+- Updated dependencies
+
+
 ## [1.3.1]
 
 ### Fixed
