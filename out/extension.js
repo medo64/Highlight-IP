@@ -28,7 +28,7 @@ function activate(context) {
      * @param {vscode.Range[]} [ranges]
      */
     function renderDocument(editor, ranges) {
-        if (isDebug) { console.debug('renderDocument()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' renderDocument()') }
         if (!editor) { return }
 
         const document = editor.document
@@ -45,6 +45,7 @@ function activate(context) {
         if (ipNetworkDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, []) }
             ipNetworkDecorationType.dispose()
+            if (isDebug) { console.debug(new Date().getTime() + ' renderDocument() disposed old network decoration type') }
         }
         ipNetworkDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.network') })
         ipNetworkDecorationTypes[id] =  ipNetworkDecorationType
@@ -53,6 +54,7 @@ function activate(context) {
         if (ipSubnetDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, []) }
             ipSubnetDecorationType.dispose()
+            if (isDebug) { console.debug(new Date().getTime() + ' renderDocument() disposed old subnet decoration type') }
         }
         ipSubnetDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.subnet') })
         ipSubnetDecorationTypes[id] =  ipSubnetDecorationType
@@ -61,6 +63,7 @@ function activate(context) {
         if (ipIssueDecorationType != null) {
             if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, []) }
             ipIssueDecorationType.dispose()
+            if (isDebug) { console.debug(new Date().getTime() + ' renderDocument() disposed old issue decoration type') }
         }
         ipIssueDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('ipaddress.issue') })
         ipIssueDecorationTypes[id] =  ipIssueDecorationType
@@ -299,13 +302,13 @@ function activate(context) {
             }
         }
 
-        if (isDebug) { console.debug('renderDocument() ready for decorating in ' + (new Date().getTime() - startTime) + ' ms') }
+        if (isDebug) { console.debug(new Date().getTime() + ' renderDocument() ready for decorating in ' + (new Date().getTime() - startTime) + ' ms') }
 
         if (editor.setDecorations) { editor.setDecorations(ipNetworkDecorationType, ipNetworkDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipSubnetDecorationType, ipSubnetDecorations) }
         if (editor.setDecorations) { editor.setDecorations(ipIssueDecorationType, ipIssueDecorations) }
 
-        if (isDebug) { console.debug('renderDocument() finished in ' + (new Date().getTime() - startTime) + ' ms') }
+        if (isDebug) { console.debug(new Date().getTime() + ' renderDocument() finished in ' + (new Date().getTime() - startTime) + ' ms') }
     }
 
 
@@ -345,13 +348,13 @@ function activate(context) {
 
     /** @param e: vscode.TextEditorSelectionChangeEvent */
     vscode.window.onDidChangeActiveTextEditor((e) => {
-        if (isDebug) { console.debug('onDidChangeActiveTextEditor()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' onDidChangeActiveTextEditor()') }
         renderDocument(e)
     }, null, context.subscriptions)
 
     /** @param e: vscode.TextEditorVisibleRangesChangeEvent */
     vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
-        if (isDebug) { console.debug('onDidChangeTextEditorVisibleRanges()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' onDidChangeTextEditorVisibleRanges()') }
         if ((e.textEditor != null) && (e.textEditor.document != null) && (e.visibleRanges.length > 0)) {
             renderDocument(e.textEditor, e.visibleRanges)
         }
@@ -359,19 +362,19 @@ function activate(context) {
 
     /** @param e: vscode.TextEditor[] */
     vscode.window.onDidChangeVisibleTextEditors((e) => {
-        if (isDebug) { console.debug('onDidChangeVisibleTextEditors()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' onDidChangeVisibleTextEditors()') }
         e.forEach(editor => {
             renderDocument(editor)
         })
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeTextDocument(() => {
-        if (isDebug) { console.debug('onDidChangeTextDocument()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' onDidChangeTextDocument()') }
         renderDocument(vscode.window.activeTextEditor)
     }, null, context.subscriptions)
 
     vscode.workspace.onDidChangeConfiguration(() => {
-        if (isDebug) { console.debug('onDidChangeConfiguration()') }
+        if (isDebug) { console.debug(new Date().getTime() + ' onDidChangeConfiguration()') }
         renderDocument(vscode.window.activeTextEditor)
     }, null, context.subscriptions)
 }
