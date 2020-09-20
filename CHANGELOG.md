@@ -1,5 +1,14 @@
 # Change Log
 
+## [1.3.3]
+
+### Changed
+- Performance improvements
+
+### Fixed
+- Updated dependencies
+
+
 ## [1.3.2]
 
 ### Changed
