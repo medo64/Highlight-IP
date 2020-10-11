@@ -3,7 +3,7 @@
     "displayName": "Highlight IP",
     "description": "Highlights IPv4 and IPv6 addresses in the document.",
     "icon": "ICON.png",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "publisher": "medo64",
     "galleryBanner": {
         "color": "#373E6D",
