@@ -3,7 +3,7 @@ Highlight IP
 
 This extension will color any occurrences of IPv4 or IPv6 addresses.
 
-![Screenshot](https://raw.githubusercontent.com/medo64/highlight-ip/master/images/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/medo64/highlight-ip/main/images/screenshot.png)
 
 
 ## Extension Settings
