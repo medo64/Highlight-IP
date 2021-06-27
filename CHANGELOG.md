@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.8]
+
+### Fixed
+- Security updates for dependencies
+
+
 ## [1.3.7]
 
 ### Fixed
