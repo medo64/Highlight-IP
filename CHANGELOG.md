@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.3.13]
+
+### Changed
+- Updated icon
+
+### Fixed
+- Security updates for dependencies
+
 ## [1.3.12]
 
 ### Fixed
