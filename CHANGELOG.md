@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.3.14]
+
+### Fixed
+- Updated read-me to avoid VSCode showing empty extension details
+
 ## [1.3.13]
 
 ### Changed

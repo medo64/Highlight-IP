@@ -23,10 +23,12 @@ This extension contributes the following settings:
 
 ### Default Configuration
 
+```json
     "highlight-ip.v4": true,
     "highlight-ip.v6": true,
     "highlight-ip.cidr": true,
     "highlight-ip.strict": false,
+```
 
 
 ## Extension Colors
@@ -42,11 +44,13 @@ This extension contributes the following colors:
 
 ### Default Colors
 
+```json
     "workbench.colorCustomizations": {
         "ipaddress.network": "textLink.foreground",
         "ipaddress.subnet": "textLink.foreground",
         "ipaddress.issue": "errorForeground",
     }
+```
 
 
 ## Known Issues
