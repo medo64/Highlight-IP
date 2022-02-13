@@ -5,11 +5,10 @@
  <defs>
 	</defs>
  <g id="Layer 1" transform="scale(1 -1)">
-  <rect x="-19.6415" y="-9.3065" width="39.283" height="18.613" rx="0" ry="0" transform="matrix(1 0 0 1 44.094 80.215)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
-  <rect x="-19.6415" y="-9.3065" width="39.283" height="18.613" rx="0" ry="0" transform="matrix(1 0 0 1 45.058 12.306)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
-  <rect x="-19.6415" y="-40.1275" width="39.283" height="80.255" rx="0" ry="0" transform="matrix(1 0 0 1 68.224 47.807)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
-  <rect x="-14.3835" y="-40.1275" width="28.767" height="80.255" rx="0" ry="0" transform="matrix(1 0 0 1 22.164 48.04)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
-  <rect x="-26.9975" y="-26.9975" width="53.995" height="53.995" rx="0" ry="0" transform="matrix(1 0 0 1 47.996 47.998)" stroke-linejoin="miter" stroke="none" fill="#85ded8" fill-rule="nonzero" stroke-width="12"/>
-  <path d="M 81,3 L 45,3 L 45,75 L 57,75 C 67.932,75 75,67.932 75,57 C 75,46.064 67.932,39 57,39 L 51,39 L 51,9 L 81,9 C 84.308,9 87,11.688 87,15 L 87,81 C 87,84.308 84.308,87 81,87 L 15,87 C 11.688,87 9,84.308 9,81 L 9,15 C 9,11.688 11.688,9 15,9 L 33,9 L 33,75 L 39,75 L 39,3 L 15,3 C 8.38,3 3,8.38 3,15 L 3,81 C 3,87.616 8.38,93 15,93 L 81,93 C 87.616,93 93,87.616 93,81 L 93,15 C 93,8.38 87.616,3 81,3 Z M 51,45 L 57,45 C 64.624,45 69,49.372 69,57 C 69,64.624 64.624,69 57,69 L 51,69 L 51,45 Z" fill="#007f01" stroke-linejoin="miter" stroke="none" stroke-width="3" fill-rule="nonzero" marker-start="none" marker-end="none"/>
+  <rect x="-19.6415" y="-9.3065" width="39.283" height="18.613" rx="0" ry="0" transform="matrix(1 0 0 1 44.093 80.215)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
+  <rect x="-19.6415" y="-40.1265" width="39.283" height="80.253" rx="0" ry="0" transform="matrix(1 0 0 1 68.223 47.807)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
+  <rect x="-14.3835" y="-40.1265" width="28.767" height="80.253" rx="0" ry="0" transform="matrix(1 0 0 1 22.163 48.04)" stroke-linejoin="miter" stroke="none" stroke-width="3" fill="#ffffff"/>
+  <rect x="-26.9975" y="-26.9975" width="53.995" height="53.995" rx="0" ry="0" transform="matrix(1 0 0 1 47.995 47.998)" stroke-linejoin="miter" stroke="none" fill="#85ded8" fill-rule="nonzero" stroke-width="12"/>
+  <path d="M 81,3 L 45,3 L 45,75 L 57,75 C 67.932,75 75,67.932 75,57 C 75,46.064 67.932,39 57,39 L 51,39 L 51,9 L 81,9 C 84.308,9 87,11.688 87,15 L 87,81 C 87,84.308 84.308,87 81,87 L 15,87 C 11.688,87 9,84.308 9,81 L 9,15 C 9,11.688 11.688,9 15,9 L 33,9 L 33,75 L 39,75 L 39,3 L 15,3 C 8.38,3 3,8.38 3,15 L 3,81 C 3,87.616 8.38,93 15,93 L 81,93 C 87.616,93 93,87.616 93,81 L 93,15 C 93,8.38 87.616,3 81,3 Z M 51,45 L 57,45 C 64.624,45 69,49.372 69,57 C 69,64.624 64.624,69 57,69 L 51,69 L 51,45 Z" fill="#00017f" stroke-linejoin="miter" stroke="none" stroke-width="3" fill-rule="nonzero" marker-start="none" marker-end="none"/>
  </g>
 </svg>
