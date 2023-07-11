@@ -1,14 +1,28 @@
 # Change Log
 
+## [1.3.17]
+
+### Fixed
+- Security updates for dependencies
+
+
+## [1.3.16]
+
+### Fixed
+- Security updates for dependencies
+
+
 ## [1.3.15]
 
 ### Fixed
 - Security updates for dependencies
 
+
 ## [1.3.14]
 
 ### Fixed
 - Updated read-me to avoid VSCode showing empty extension details
+
 
 ## [1.3.13]
 
@@ -18,25 +32,30 @@
 ### Fixed
 - Security updates for dependencies
 
+
 ## [1.3.12]
 
 ### Fixed
 - Security updates for dependencies
+
 
 ## [1.3.11]
 
 ### Fixed
 - Security updates for dependencies
 
+
 ## [1.3.10]
 
 ### Fixed
 - Security updates for dependencies
 
+
 ## [1.3.9]
 
 ### Fixed
 - Security updates for dependencies
+
 
 ## [1.3.8]
 
