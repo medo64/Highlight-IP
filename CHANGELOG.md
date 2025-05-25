@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.20]
+
+### Fixed
+- Dependency updates
+
+
 ## [1.3.19]
 
 ### Fixed
