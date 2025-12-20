@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.22]
+
+### Fixed
+- Dependency updates
+
+
 ## [1.3.21]
 
 ### Fixed
