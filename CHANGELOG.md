@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.23]
+
+### Fixed
+- Readded missing changelog
+
+
 ## [1.3.22]
 
 ### Fixed
