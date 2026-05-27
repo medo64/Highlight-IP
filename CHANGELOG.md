@@ -1,9 +1,15 @@
 # Change Log
 
+## [1.3.24]
+
+### Fixed
+- Dependency updates
+
+
 ## [1.3.23]
 
 ### Fixed
-- Readded missing changelog
+- Re-added missing changelog
 
 
 ## [1.3.22]
