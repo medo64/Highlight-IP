@@ -106,7 +106,7 @@
     "scripts": {},
     "devDependencies": {
         "eslint": "^10.4.0",
-        "@vscode/vsce": "^3.9.1",
+        "@vscode/vsce": "^3.9.2",
         "@vscode/test-electron": "^2.5.2"
     }
 }
