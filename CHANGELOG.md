@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.27]
+
+### Fixed
+- Dependency updates
+
+
 ## [1.3.26]
 
 ### Fixed
